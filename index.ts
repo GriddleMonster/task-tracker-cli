@@ -24,12 +24,24 @@ const addTask = (description: string) => {
     fs.writeFileSync('tasks.json', JSON.stringify(tasks));
 }
 
-const main = (action: 'add' | 'update' | 'delete', description: string) => {
+const updateTask = (taskID: number, newDescription: string) => {
+    console.log('updating task with ID: ', taskID);
+    console.log('new description: ', newDescription);
+    const tasks: Task[] = JSON.parse(fs.readFileSync('tasks.json', 'utf-8'));
+    const taskIndex = tasks.findIndex((task) => task.id === taskID);
+    tasks[taskIndex].description = newDescription;
+    fs.writeFileSync('tasks.json', JSON.stringify(tasks));
+}
+
+const main = (action: 'add' | 'update' | 'delete', taskID: number, description: string) => {
     if (action === 'add') {
         addTask(description);
+    }
+    if (action === 'update') {
+        updateTask(Number(taskID), description)
     } else {
         console.log(`Action ${action} is not implemented yet.`);
     }
 }
 
-main(argv[2], argv[3]);
+main(argv[2], argv[3], argv[4]);
